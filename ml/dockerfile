@@ -1,0 +1,20 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Installer les dépendances Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copier les fichiers nécessaires
+COPY . .
+COPY wait-for.sh .
+
+# Installer netcat pour wait-for.sh
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+# Rendre le script d'attente exécutable
+RUN chmod +x wait-for.sh
+
+# Démarrer avec le script de wait
+CMD ["./wait-for.sh", "api", "8000", "--", "python", "regression_pipeline.py"]

@@ -1,45 +1,4 @@
-# import pandas as pd
-# import mlflow
-# import mlflow.sklearn
-# from sklearn.linear_model import LinearRegression
-# from sklearn.model_selection import train_test_split
-# from sklearn.metrics import mean_squared_error
-# from mlflow.models.signature import infer_signature  #
 
-# # 1. Charger le fichier CSV
-# df = pd.read_csv("Iris_Data.csv")  # Mets bien ton fichier au bon endroit + remplacer par l'api de postgree
-
-# # 2. Définir X et y
-# X = df[["sepal_width"]]
-# y = df["sepal_length"]
-
-# # 3. Split train/test
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# # 4. Suivi MLflow
-# with mlflow.start_run():
-#     # Modèle
-#     model = LinearRegression()
-#     model.fit(X_train, y_train)
-
-#     # Prédictions et évaluation
-#     predictions = model.predict(X_test)
-#     mse = mean_squared_error(y_test, predictions)
-
-#     # ✅ Ajouter la signature (automatiquement à partir des données)
-#     signature = infer_signature(X_test, predictions)
-
-#     # Logging avec signature
-#     mlflow.log_param("model", "LinearRegression")
-#     mlflow.log_metric("mse", mse)
-#     mlflow.sklearn.log_model(model, "model", signature=signature)
-
-#     print(f"✅ MSE: {mse}")
-
-#     # 🔍 Test de prédiction
-#     example = pd.DataFrame([[3.5]], columns=["sepal_width"])  # ✅ pour éviter le warning
-#     pred = model.predict(example)
-#     print(f"🔍 Pour une largeur de 3.5 cm, la longueur prédite est : {pred[0]:.2f} cm")
 import pandas as pd
 import mlflow
 import mlflow.sklearn
@@ -51,7 +10,12 @@ import matplotlib.pyplot as plt
 import os
 
 # 1. Charger le fichier CSV (à remplacer plus tard par une connexion PostgreSQL)
-df = pd.read_csv("Iris_Data.csv")
+import requests
+response = requests.get("http://api:8000/iris")
+
+ # appel vers l’API dans Docker
+df = pd.DataFrame(response.json())
+
 
 # 2. Définir X (entrée) et y (sortie)
 X = df[["sepal_width"]]
@@ -80,10 +44,6 @@ with mlflow.start_run():
 
     print(f"✅ MSE: {mse}")
 
-    # 🔍 Test de prédiction manuelle
-    example = pd.DataFrame([[3.5]], columns=["sepal_width"])
-    pred = model.predict(example)
-    print(f"🔍 Pour une largeur de 3.5 cm, la longueur prédite est : {pred[0]:.2f} cm")
 
     # 📈 Générer un graphe de l'entraînement
     plt.figure(figsize=(8, 5))

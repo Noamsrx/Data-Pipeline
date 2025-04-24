@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: iris_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: iris_calcul
+    ports:
+      - "5433:5432"
+    volumes:
+      - iris_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./api
+    container_name: iris_api
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/iris_calcul
+
+  data-loader:
+    build: ./src
+    container_name: iris_loader
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: iris_calcul
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    command: ["./wait-for.sh", "db", "5432", "python", "db.py"]
+
+
+  mlflow-pipeline:
+    build: ./ml
+    container_name: iris_mlflow
+    depends_on:
+      data-loader:
+        condition: service_completed_successfully
+    command: ["./wait-for.sh", "api", "8000", "python", "regression_pipeline.py"]
+
+
+volumes:
+  iris_data:

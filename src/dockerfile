@@ -1,0 +1,16 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ⬇️ INSTALL NETCAT
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+COPY db.py .
+COPY iris.csv .
+COPY wait-for.sh .
+RUN chmod +x wait-for.sh
+
+CMD ["./wait-for.sh"]
