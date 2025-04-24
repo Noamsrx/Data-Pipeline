@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/3563cd454833433c846ed54d53a0375a/artifacts
+end_time: 1745415349216
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3563cd454833433c846ed54d53a0375a
+run_name: zealous-yak-565
+run_uuid: 3563cd454833433c846ed54d53a0375a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745415340315
+status: 4
+tags: []
+user_id: Epitech Digital
