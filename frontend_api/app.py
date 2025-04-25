@@ -30,5 +30,5 @@ def hello():
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get("PORT", 10000))  # Render injecte la variable PORT
+    port = int(os.environ.get("PORT", 8000))  # Render injecte la variable PORT
     app.run(host="0.0.0.0", port=port)         # écoute bien sur 0.0.0.0
