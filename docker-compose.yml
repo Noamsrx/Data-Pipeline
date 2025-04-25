@@ -43,7 +43,6 @@ services:
       POSTGRES_PORT: 5432
     command: ["./wait-for.sh", "db", "5432", "python", "db.py"]
 
-
   mlflow-pipeline:
     build: ./ml
     container_name: iris_mlflow
@@ -52,6 +51,15 @@ services:
         condition: service_completed_successfully
     command: ["./wait-for.sh", "api", "8000", "python", "regression_pipeline.py"]
 
+  frontend-api:
+    build:
+      context: .
+      dockerfile: frontend_api/Dockerfile
+    container_name: iris_frontend_api
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mlflow-pipeline
 
 volumes:
   iris_data:
