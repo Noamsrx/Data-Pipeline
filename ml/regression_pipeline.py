@@ -15,7 +15,8 @@ mlflow.set_tracking_uri("http://127.0.0.1:5000")
  
 # 1. Charger le fichier CSV (à remplacer plus tard par une connexion PostgreSQL)
 import requests
-response = requests.get("http://api:8000/iris")
+response = requests.get("https://data-pipeline-lobo.onrender.com/iris")
+
  
  # appel vers l’API dans Docker
 df = pd.DataFrame(response.json())
