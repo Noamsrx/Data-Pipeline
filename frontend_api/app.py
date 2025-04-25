@@ -4,6 +4,7 @@ from ml.regression_pipeline import load_data, train_and_log_model
 import mlflow
 import mlflow.sklearn
 import pandas as pd
+import os
 
 app = Flask(__name__)
 CORS(app) 
@@ -29,6 +30,5 @@ def hello():
 
 if __name__ == '__main__':
     import os
-port = int(os.environ.get("PORT", 5001))
-app.run(host="0.0.0.0", port=port)
-
+    port = int(os.environ.get("PORT", 10000))  # Render injecte la variable PORT
+    app.run(host="0.0.0.0", port=port)         # écoute bien sur 0.0.0.0
